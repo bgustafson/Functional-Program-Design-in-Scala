@@ -28,57 +28,57 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(insert(m, h)) == m
   }
 
-  property("1 - minimum") = forAll { a: Int =>
-    val h = insert(a, empty)
-    findMin(h) == a
+  property("1 - find the smallest element") = forAll { a: Int =>
+    val heap = insert(a, empty)
+    findMin(heap) == a
   }
 
-  property("2 - delete") = forAll { i: Int =>
-    val h = empty
-    val h2 = insert(i, h)
-    val h3 = deleteMin(h2)
-    isEmpty(h3)
+  property("2 - insert and then remove the elements to get an empty heap") = forAll { i: Int =>
+    val heap = empty
+    val heap2 = insert(i, heap)
+    val heap3 = deleteMin(heap2)
+    isEmpty(heap3)
   }
 
-  property("3- sort") = forAll { (h: H, _: Int) =>
-    sort(h, List())
+  property("3- sort the heap") = forAll { (heap: H, _: Int) =>
+    sort(heap, List())
   }
 
-  def sort(h: H, list: List[Int]): Boolean = {
-    if (isEmpty(h)) list match {
+  def sort(heap: H, list: List[Int]): Boolean = {
+    if (isEmpty(heap)) list match {
       case Nil => true
       case x :: xs => xs.forall(x >= _)
     }
     else {
-      val m = findMin(h)
-      val h2 = deleteMin(h)
-      sort(h2, m :: list)
+      val min = findMin(heap)
+      val heap2 = deleteMin(heap)
+      sort(heap2, min :: list)
     }
   }
 
-  property("4 - melding sort") = forAll { (h1: H, h2: H) =>
-    sort(meld(h1, h2), List())
+  property("4 - melding sort of the heap") = forAll { (heap1: H, heap2: H) =>
+    sort(meld(heap1, heap2), List())
   }
 
-  property("5- melding minimum") = forAll { (h1: H, h2: H) =>
-    val m1 = findMin(h1)
-    val m2 = findMin(h2)
-    val melded = meld(h1, h2)
-    val m3 = findMin(melded)
-    m3 == m1 || m3 == m2
+  property("5- melding find the smallest element") = forAll { (heap1: H, heap2: H) =>
+    val min1 = findMin(heap1)
+    val min2 = findMin(heap2)
+    val melded = meld(heap1, heap2)
+    val min3 = findMin(melded)
+    min3 == min1 || min3 == min2
   }
 
-  property("6 - contains") = forAll { (h1: H, i: Int) =>
-    val h2 = insert(i, h1)
-    contains(h2, i)
+  property("6 - does the heap contain the element") = forAll { (heap1: H, i: Int) =>
+    val heap2 = insert(i, heap1)
+    contains(heap2, i)
   }
 
-  def contains(h: H, x: Int): Boolean = {
-    if (isEmpty(h)) false
+  def contains(heap: H, x: Int): Boolean = {
+    if (isEmpty(heap)) false
     else {
-      val m = findMin(h)
-      if (m == x) true
-      else contains(deleteMin(h), x)
+      val min = findMin(heap)
+      if (min == x) true
+      else contains(deleteMin(heap), x)
     }
   }
 }
